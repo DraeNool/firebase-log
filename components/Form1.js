@@ -65,6 +65,19 @@ export default class Form1 extends Component {
       console.log(error.toString())
     }
   }
+  async loginWithFacebook() {
+
+    const { type, token } = await Expo.Facebook.logInWithReadPermissionsAsync('339904279995445', { permissions: ['public_profile'] })
+
+    if (type == 'success') {
+
+      const credential = firebase.auth.FacebookAuthProvider.credential(token)
+
+      firebase.auth().signInAndRetrieveDataWithCredential(credential).catch((error) => {
+        console.log(error)
+      })
+    }
+  }
   render() {
     return (
         <View style={styles.container}>
@@ -95,10 +108,14 @@ export default class Form1 extends Component {
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.button}
-        onPress={() => this.signUpUser(this.state.email, this.state.password)}
-        >
+        onPress={() => this.signUpUser(this.state.email, this.state.password)}>
         <Text style={styles.buttonText}>Registrarse
-        
+        </Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button}
+        onPress={() => this.loginWithFacebook()}
+        >
+        <Text style={styles.buttonText}>Iniciar sesion con Facebook
         </Text>
         </TouchableOpacity>
         </View>
